@@ -1,0 +1,9 @@
+VAR
+	bRequestOutput : BOOL;
+	bReset : BOOL;
+	bToggleDemoMode : BOOL;
+	SafeContactorFub : SContactor;
+	SafeDigitalOutFub : SDigitalOut;
+	IO : IO_TYPE;
+	IOSP : IOSP_TYPE;
+END_VAR
