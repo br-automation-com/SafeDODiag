@@ -1,9 +1,22 @@
+(*Runtime task cfg and cmd*)
 VAR
 	bRequestOutput : BOOL;
 	bReset : BOOL;
-	bToggleDemoMode : BOOL;
-	SafeContactorFub : SContactor;
-	SafeDigitalOutFub : SDigitalOut;
+	bToggleSingleVsDualOutputs : BOOL; (*TRUE: single output channel; FALSE: dual output channels*)
+	bToggleMappSafetyVsSafetyRelease : BOOL; (*TRUE: mapp Safety I/O mapping; FALSE: Safety Release I/O mapping*)
+END_VAR
+(*I/O signal processing*)
+VAR
 	IO : IO_TYPE;
 	IOSP : IOSP_TYPE;
+END_VAR
+(*Safety Release-compatible fubs*)
+VAR
+	SafeContactorFub : SContactor;
+	SafeDigitalOutFub : SDigitalOut;
+END_VAR
+(*mapp Safety-compatible fubs*)
+VAR
+	MpSafeContactorFub : SfContactor;
+	MpSafeDigitalOutFub : SfDigitalOut;
 END_VAR

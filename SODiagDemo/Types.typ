@@ -11,7 +11,8 @@ TYPE
 		Contactor2Fdbk : BOOL; (*Check if contactor 2 is open or closed (TRUE--open; FALSE--closed)*)
 		Contactor1EnergizeCurrentOK : BOOL; (*Check if SO card is sending an expected level of current (50 mA - 500 mA) to energize contactor coil 1*)
 		Contactor2EnergizeCurrentOK : BOOL; (*Check if SO card is sending an expected level of current (50 mA - 500 mA) to energize contactor coil 2*)
-		ContactorOutputInterlockStates : UINT; (*Read output interlock states from SO card*)
+		ContactorOutputInterlockStatesSR : UINT; (*Safety Release-compatible: Read output interlock states from SO card*)
+		ContactorOutputInterlockStatesMP : USINT; (*mapp Safety-compatible: Read output interlock states from SO card*)
 	END_STRUCT;
 	IoOutput_TYPE : 	STRUCT 
 		Contactor1EnergizeRequest : BOOL; (*Request SO card output for contactor coil 1*)
