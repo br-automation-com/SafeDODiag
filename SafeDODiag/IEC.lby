@@ -4,6 +4,8 @@
   <Files>
     <File>Types.typ</File>
     <File>SafeDODiag.fun</File>
+    <File Description="(mapp Safety) Diagnose why two-output safety contactors are not enabled">SfContactor.st</File>
+    <File Description="(mapp Safety) Diagnose why single-channel safe digital output is not enabled">SfDigitalOut.st</File>
     <File Description="(Safety Release) Diagnose why two-output safety contactors are not enabled">SContactor.st</File>
     <File Description="(Safety Release) Diagnose why single-channel safe digital output is not enabled">SDigitalOut.st</File>
     <File>DiagAction_DiagCode.st</File>

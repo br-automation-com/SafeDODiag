@@ -126,7 +126,7 @@ END_TYPE
 TYPE
 	SDigitalOutCfgInterlockStateType : 	STRUCT  (*Single-channel safe digital output: Configure SO hardware-based output interlock state ("restart inhibit state") monitoring*)
 		EnableMon : BOOL; (*When TRUE the contactor function block will monitor SO hardware for output interlock state (require SO card's "Restart inhibit state information" turned on)*)
-		ChannelSelector : USINT; (*Selector for which byte of the output interlock channel represents the contactor pair (1/2/3/4 - SO card channel that's being controlled; 0/5+ - selection invalid)*)
+		ChannelSelector : USINT; (*Selector for which byte of the output interlock channel represents the contactor pair (1/2/3/4 for Safety Release, or 1/2 for mapp Safety - SO card channel that's being controlled; 0 or any other number - selection invalid)*)
 		StartDelayTime : TIME := T#3s; (*The amount of time the gray CPU fub will delay checking output interlock states after SO card shows SafeModuleOK (to allow channel diagnosis to complete after SO card reports SafeModuleOK)*)
 		MonitorTime : TIME; (*The amount of time the gray CPU fub will delay comparing interlock states' discrepancy*)
 	END_STRUCT;
@@ -136,5 +136,47 @@ TYPE
 		Fdbk : SContactorCfgFdbkType; (*Option for monitoring status input of each contactors*)
 		Current : SContactorCfgCurrentType; (*Option for monitoring current associated with the pair of contactors*)
 		InterlockState : SDigitalOutCfgInterlockStateType; (*Option for monitoring output interlock state of each contactor*)
+	END_STRUCT;
+END_TYPE
+
+(*(mapp Safety) Interlock state monitoring for two-output safety contactor control (a modification of SContactor)*)
+
+TYPE
+	SfContactorCfgInterlockStateType : 	STRUCT  (*Dual-channel safe digital output: Configure SO hardware-based output interlock state ("error interlock state") monitoring*)
+		EnableMon : BOOL; (*When TRUE the contactor function block will monitor SO hardware for output interlock state (require SO card's "Restart inhibit state information" turned on)*)
+		StartDelayTime : TIME := T#3s; (*The amount of time the gray CPU fub will delay checking output interlock states after SO card shows SafeModuleOK (to allow channel diagnosis to complete after SO card reports SafeModuleOK)*)
+		MonitorTime : TIME; (*The amount of time the gray CPU fub will delay comparing interlock states' discrepancy*)
+	END_STRUCT;
+	SfContactorCfgType : 	STRUCT 
+		Name : STRING[35] := 'NamedContactors'; (*Unique contactor name for easy identification in alarm text*)
+		DiagCode : SContactorCfgDiagCodeType; (*Option for monitoring safety CPU's SF_EDM fub state*)
+		Fdbk : SContactorCfgFdbkType; (*Option for monitoring status input of each contactors*)
+		Current : SContactorCfgCurrentType; (*Option for monitoring current associated with the pair of contactors*)
+		InterlockState : SfContactorCfgInterlockStateType; (*Option for monitoring output interlock state of each contactor*)
+		BootUpDelay : TIME := T#10m; (*Wait time for the SafeModuleOK feedback on PLC startup*)
+	END_STRUCT;
+	SfContactorIntInputType : 	STRUCT 
+		SF_In_DiagCode : UINT;
+		SI_In_SafeModuleOK : BOOL;
+		SI_In_Contactor1Fdbk : BOOL;
+		SI_In_Contactor2Fdbk : BOOL;
+		SO_In_SafeModuleOK : BOOL;
+		SO_In_Output1PhysicalState : BOOL;
+		SO_In_Output2PhysicalState : BOOL;
+		SO_In_Output1CurrentOK : BOOL;
+		SO_In_Output2CurrentOK : BOOL;
+		SO_In_OutputInterlockStates : USINT;
+		InterlockStateOutput1 : USINT;
+		InterlockStateOutput2 : USINT;
+	END_STRUCT;
+	SfContactorInternalType : 	STRUCT 
+		State : SContactorStateEnum; (*State of the contactor fub*)
+		StateGoTo : SContactorStateEnum;
+		Input : SfContactorIntInputType;
+		Output : SContactorIntOutputType;
+		Fub : SContactorIntFubType;
+		Prev : SContactorIntPrevType;
+		EDMReset : BOOL;
+		i : UDINT;
 	END_STRUCT;
 END_TYPE
