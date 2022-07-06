@@ -1,4 +1,4 @@
-(*##################################################
+(*
 This fub has four monitoring options, ordered by priority below:
 1) SF_EDM DiagCode from safety CPU (highest priority)
 2) external contactor state monitoring (using SafeDigitalInput0x from SI card)
@@ -107,7 +107,7 @@ FUNCTION_BLOCK SContactor
 		IF ( Config.InterlockState.ChannelPairSelector = 1 ) THEN
 			Internal.Input.SO_In_OutputInterlockStates	:= Simulation.Input.InterlockStateOutput1 + Simulation.Input.InterlockStateOutput2 * 16#10;
 		ELSIF ( Config.InterlockState.ChannelPairSelector = 3 ) THEN
-			Internal.Input.SO_In_OutputInterlockStates	:= Simulation.Input.InterlockStateOutput1 * 16#100 + Simulation.Input.InterlockStateOutput2 * 16#100;
+			Internal.Input.SO_In_OutputInterlockStates	:= Simulation.Input.InterlockStateOutput1 * 16#100 + Simulation.Input.InterlockStateOutput2 * 16#1000;
 		ELSE
 			Internal.Input.SO_In_OutputInterlockStates	:= 0;
 		END_IF
@@ -244,7 +244,7 @@ FUNCTION_BLOCK SContactor
 					DiagCode			:= 16#F020;
 					Diag.ErrorConfig	:= TRUE;
 					Diag.DiagText		:= 'NoStartDelay';
-				ELSIF ( Config.DiagCode.StartDelayTime > T#10s ) THEN // Check time range
+				ELSIF ( Config.DiagCode.StartDelayTime > T#2m ) THEN // Check time range
 					DiagCode			:= 16#F021;
 					Diag.ErrorConfig	:= TRUE;
 					Diag.DiagText		:= 'StartDelayTooLong';

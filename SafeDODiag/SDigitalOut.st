@@ -1,4 +1,4 @@
-(*##################################################
+(*
 This fub has four monitoring options, ordered by priority below:
 1) SF_EDM DiagCode from safety CPU (highest priority)
 2) external contactor state monitoring (using SafeDigitalInput0x from SI card)
