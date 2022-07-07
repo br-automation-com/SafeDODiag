@@ -1,4 +1,8 @@
-SafeDODiag is a library that monitors for errors when energizing single- or dual-channel safe digital output.
+SafeDODiag is an Automation Studio library that monitors for errors when energizing single- or dual-channel safe digital output. This library is compatible with Safety Release and mapp Safety, and X20SO21x0 and X20SO41x0 hardware are currently supported.
+
+To use, simply clone this repository to your computer and drag the SafeDODiag folder into your Automation Studio project's Libraries folder.
+
+The SODiagDemo folder is a cyclic task example that shows how to configure the function block inputs. You don't need the SODiagDemo folder in your project.
 
 
 [Background]
@@ -15,10 +19,10 @@ This library simplifies the use of these monitoring options by combining them in
 SContactor fub is designed for operating two safety contactors in series, but the fub can be used for dual-channel safe digital output control such as dual-channel axis STO.
 SDigitalOut fub is designed for operating one safe digital output channel, such as a gas dump valve.
 Both fubs have four prioritized monitoring options:
-1. Config.DiagCode: SF_EDM DiagCode from safety CPU – if this monitoring config is enabled, external feedback monitoring and SO card's internal CurrentOK monitoring will be ignored (highest priority).
-2. Config.Fdbk: external contactor state monitoring (using SafeDigitalInput0X from SI card) – this config should only be used if SF_EDM DiagCode cannot be used, e.g. if PLKbandwidth is at a premium and we cannot afford to transmit SF_EDM DiagCode.
-3. Config.Current: SO channel's built-in wiring monitoring (using CurrentOK0X from SO card) – this config should only be used if feedback cannot be used, e.g. controlling dual-channel STO of a VFD (lowest priority).
-4. Config.InterlockState: SO channel's output interlock state monitoring (using FBK_Status_1 or FBOutputStateXXYY from SO card) – this config only informs why outputs do not energize, i.e. whether grayCPU doesn't request output or safety CPU doesn't permit output (in parallel to other options).
+1. Config.DiagCode: SF_EDM DiagCode from safety CPU â€“ if this monitoring config is enabled, external feedback monitoring and SO card's internal CurrentOK monitoring will be ignored (highest priority).
+2. Config.Fdbk: external contactor state monitoring (using SafeDigitalInput0X from SI card) â€“ this config should only be used if SF_EDM DiagCode cannot be used, e.g. if PLKbandwidth is at a premium and we cannot afford to transmit SF_EDM DiagCode.
+3. Config.Current: SO channel's built-in wiring monitoring (using CurrentOK0X from SO card) â€“ this config should only be used if feedback cannot be used, e.g. controlling dual-channel STO of a VFD (lowest priority).
+4. Config.InterlockState: SO channel's output interlock state monitoring (using FBK_Status_1 or FBOutputStateXXYY from SO card) â€“ this config only informs why outputs do not energize, i.e. whether grayCPU doesn't request output or safety CPU doesn't permit output (in parallel to other options).
 Interface mapping recommendations:
 1. Assign the Status.SafetyResetRequested fub output directly to an IO output variable that uses a BOOL10x channel on the safety CPU to reset SF_EDM error. This request should only be used to reset SF_EDM errors and nothing else.
 2. Pass into the pSO_Out_... fub inputs the ADR of the IO output variables described in the Function Block Interface section, and do not manipulate the IOSP output variables in the task that calls this fub.
@@ -63,25 +67,25 @@ pSI_In_Contactor2Fdbk;	Reference toBOOL;	(SContactor only) ADR of the IO input v
 pSI_In_DigitalOutFdbk;	Reference toBOOL;	(SDigitalOut only) ADR of the IO input variable that maps to the SIcard's input SafeDigitalInput0X. This checks if the load connected to the safe digital output is de-activated (feedback = TRUE) or activated(feedback = FALSE). (Requiring ADR of the IO variable allows the fub to check if this input has been connected.)
 
 Inputs to EnableMonitoring of OutputCurrentOK;	Data Types;	Descriptions
-Config.Current.EnableMon;	BOOL;	Enable the use of CurrentOK from SO card to monitor if outputs are wired up – only available on X20SOx110 andX20SOx120 (This config should only be used if feedbacks cannot be used, e.g. controlling dual-channel STO of a VFD.)
+Config.Current.EnableMon;	BOOL;	Enable the use of CurrentOK from SO card to monitor if outputs are wired up â€“ only available on X20SOx110 andX20SOx120 (This config should only be used if feedbacks cannot be used, e.g. controlling dual-channel STO of a VFD.)
 Config.Current.MonitorTime;	TIME (required, must be <=T#1s);	This sets the amount of time the gray CPU fub will delay checking SO card current output levels (to allow transient currents to settle).
-pSO_In_Output1CurrentOK;	Reference toBOOL;	(SContactor only) ADR of the IO input variable that maps to the SOcard's input CurrentOK0X. This checks if there is a reasonable amount of current flow(50 mA to 500 mA) from the SO card to contactor coil 1 – if output is not enabled or if the channel is not wired up,CurrentOK shows FALSE. (Requiring ADR of the IO variable allows the fub to check if this input has been connected.)
-pSO_In_Output2CurrentOK;	Reference toBOOL;	(SContactor only) ADR of the IO input variable that maps to the SOcard's input CurrentOK0Y. This checks if there is a reasonable amount of current flow(50 mA to 500 mA) from the SO card to contactor coil 2 – if output is not enabled or if the channel is not wired up,CurrentOK shows FALSE. (Requiring ADR of the IO variable allows the fub to check if this input has been connected.)
-pSO_In_OutputCurrentOK;	Reference toBOOL;	(SDigitalOut only) ADR of the IO input variable that maps to the SOcard's input CurrentOK0X. This checks if there is a reasonable amount of current flow(50 mA to 500 mA) from the SO card to the load connected to the safe digital output – if output is not enabled or if the channel is not wired up, CurrentOK shows FALSE. (Requiring ADR of the IO variable allows the fub to check if this input has been connected.)
+pSO_In_Output1CurrentOK;	Reference toBOOL;	(SContactor only) ADR of the IO input variable that maps to the SOcard's input CurrentOK0X. This checks if there is a reasonable amount of current flow(50 mA to 500 mA) from the SO card to contactor coil 1 â€“ if output is not enabled or if the channel is not wired up,CurrentOK shows FALSE. (Requiring ADR of the IO variable allows the fub to check if this input has been connected.)
+pSO_In_Output2CurrentOK;	Reference toBOOL;	(SContactor only) ADR of the IO input variable that maps to the SOcard's input CurrentOK0Y. This checks if there is a reasonable amount of current flow(50 mA to 500 mA) from the SO card to contactor coil 2 â€“ if output is not enabled or if the channel is not wired up,CurrentOK shows FALSE. (Requiring ADR of the IO variable allows the fub to check if this input has been connected.)
+pSO_In_OutputCurrentOK;	Reference toBOOL;	(SDigitalOut only) ADR of the IO input variable that maps to the SOcard's input CurrentOK0X. This checks if there is a reasonable amount of current flow(50 mA to 500 mA) from the SO card to the load connected to the safe digital output â€“ if output is not enabled or if the channel is not wired up, CurrentOK shows FALSE. (Requiring ADR of the IO variable allows the fub to check if this input has been connected.)
 
 Inputs to Enable Monitoring ofOutput Interlock States;	Data Types;	Descriptions
-Config.Interlock.EnableMon;	BOOL;	Enable the use of FBK_Status_1 / FBOutputStateXXYY from SO card to monitor if outputs are energized – only implemented to support X20SOx110 andX20SOx120. (This config only informs why outputs do not energize, i.e. whether gray CPU doesn't request output or safety CPU doesn't permit output.)
+Config.Interlock.EnableMon;	BOOL;	Enable the use of FBK_Status_1 / FBOutputStateXXYY from SO card to monitor if outputs are energized â€“ only implemented to support X20SOx110 andX20SOx120. (This config only informs why outputs do not energize, i.e. whether gray CPU doesn't request output or safety CPU doesn't permit output.)
 Config.Interlock.ChannelPairSelector;	USINT;	(SContactor only) Selector for which byte of the output interlock channel represents the contactor pair (1 -contactor pair is on SO card channels 1 & 2; 3 -contactor pair is on SO card channels 3 & 4;0/2/4/etc. - selection invalid).
 Config.Interlock.ChannelSelector;	USINT;	(SDigitalOut only) Selector for which byte of the output interlock channel represents the contactor pair (1-4 - load is on SO card channels 1-4; 0/5+ - selection invalid).
 Config.Interlock.StartDelayTime;	TIME (defaultT#3s);	After SO card shows SafeModuleOK , this sets the amount of time this fub will delay checking output interlock states (to allow channel diagnosis to complete after SO card reportsSafeModuleOK).
 Config.Interlock.DiscrepancyTime;	TIME (required,must be <=T#1s);	This sets the amount of time the gray CPU fub will delay comparing interlock states' discrepancy.
-pSO_In_OutputInterlockStates;	Reference toUINT;	ADR of the IO input variable that maps to the SO card's "Restart inhibit state information" input FBK_Status_1 / "State number for start interlock on error" input FBOutputStateXXYY. This is used to check the output interlock state of every SO card channel (each channel is represented by 1 nibble in the range of 16#0 -16#F) – only implemented to supportX20SOx110 and X20SOx120. (Requiring ADR of the IO variable allows the fub to check if this input has been connected.)
+pSO_In_OutputInterlockStates;	Reference toUINT;	ADR of the IO input variable that maps to the SO card's "Restart inhibit state information" input FBK_Status_1 / "State number for start interlock on error" input FBOutputStateXXYY. This is used to check the output interlock state of every SO card channel (each channel is represented by 1 nibble in the range of 16#0 -16#F) â€“ only implemented to supportX20SOx110 and X20SOx120. (Requiring ADR of the IO variable allows the fub to check if this input has been connected.)
 
 DiagnosticOutputs;	DataTypes;	Descriptions
 DiagCode;	UINT;	This passes through the SF_EDM fub's DiagCode when CfgDiagCode monitoring is enabled. This shows supplemental diagnostic codes when other modes of contactor monitoring are used.
 Diag.DiagText;	STRING[79];	This provides guidance on what the output is doing/waiting on or why an error occurs.
 Diag.ErrorConfig;	BOOL;	This signals an invalid fub input config.
-Diag.ErrorSafeFub;	BOOL;	This signals either a contactor operation error detected by safety CPU's SF_EDM or an SF_EDM code administration error–seeDiag.DiagText for guidance.
+Diag.ErrorSafeFub;	BOOL;	This signals either a contactor operation error detected by safety CPU's SF_EDM or an SF_EDM code administration errorâ€“seeDiag.DiagText for guidance.
 Diag.ErrorFdbk;	BOOL;	This signals a timeout error during the switching of contactor feedback signals.
 Diag.ErrorCurrent;	BOOL;	This signals a timeout error during the switching of SO card output current levels.
 Diag.ErrorInterlock;	BOOL;	This signals either an output interlock error detected by the SO card or a two-channel discrepancy during the switching of output interlock states.
@@ -90,13 +94,13 @@ Simulation;	Data Types;	Descriptions
 Cmd.Simulation.EnableSim;	BOOL;	Stop the fub from monitoring real inputs and setting real outputs (all outputs get disabled). Start populating the Simulation output with simulated input and output values.
 Cmd.Simulation.SimMonitorErrors;	USINT;	Each bit (when set to TRUE) simulates the following hardware condition:
 	0: output 1 blocked by safety (interlock)
-	1: output 2 blocked by safety (interlock) – for SDigitalOut fub, this bit acts the same as bit 0
+	1: output 2 blocked by safety (interlock) â€“ for SDigitalOut fub, this bit acts the same as bit 0
 	2: output 1 wire break (current)
-	3: output 2 wire break (current) – for SDigitalOut fub, this bit acts the same as bit 2
+	3: output 2 wire break (current) â€“ for SDigitalOut fub, this bit acts the same as bit 2
 	4: fdbk 1 stuck on high/"contactor open" (fdbk)
-	5: fdbk 2 stuck on high/"contactor open" (fdbk) – for SDigitalOut fub, this bit acts the same as bit 4
+	5: fdbk 2 stuck on high/"contactor open" (fdbk) â€“ for SDigitalOut fub, this bit acts the same as bit 4
 	6: fdbk 1 stuck on low/"contactor closed" (fdbk)
-	7: fdbk 2 stuck on low/"contactor closed" (fdbk) – for SDigitalOut fub, this bit acts the same as bit 6
+	7: fdbk 2 stuck on low/"contactor closed" (fdbk) â€“ for SDigitalOut fub, this bit acts the same as bit 6
 Simulation.Input;	SContactor_SimInputs_TYP;	Display the simulated behavior of all input channels that may be connected to the fub.
 Simulation.Output;	SContactor_SimOutput_TYP;	Display the simulated behavior of all output channels that may be connected to the fub.
 
